@@ -38,22 +38,16 @@ public class FloatingService extends Service {
     private WindowManager windowManager;
     private LayoutParams layoutParams;
     private Button cap;
-    private Button stop;
     private String TAG="fuck";
     int mwidth = 1080;
     int mheigth = 1920;
     Intent data;
-    int count=1;
     MediaProjectionManager mediaProjectionManager;
     MediaProjection mediaProjection;
     ImageReader mImageReader;
     VirtualDisplay virtualDisplay1;
     DisplayMetrics displayMetrics;
-    ImageView imageView1;
-    ImageView imageView2;
-    ImageView imageView3;
-    ImageView imageView4;
-    ImageView imageView5;
+    ImageView imgView;
     private static Handler handler=new Handler();
     @Override
     public IBinder onBind(Intent intent) {
@@ -85,11 +79,7 @@ public class FloatingService extends Service {
         floatview = LayoutInflater.from(this).inflate(R.layout.server, null);
         windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
 
-        imageView1 = (ImageView)floatview.findViewById(R.id.img1);
-        imageView2 = (ImageView)floatview.findViewById(R.id.img2);
-        imageView3 = (ImageView)floatview.findViewById(R.id.img3);
-        imageView4 = (ImageView)floatview.findViewById(R.id.img4);
-        imageView5 = (ImageView)floatview.findViewById(R.id.img5);
+        imgView = (ImageView)floatview.findViewById(R.id.img1);
 
         mediaProjectionManager = (MediaProjectionManager) getApplicationContext().getSystemService(MEDIA_PROJECTION_SERVICE);
         displayMetrics = new DisplayMetrics();
@@ -115,58 +105,13 @@ public class FloatingService extends Service {
                 bmp.recycle();
                 Long endtime = System.currentTimeMillis();
                 Log.e(TAG,String.valueOf(endtime-starttime));
-                switch (count){
-                    case 1:
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView1.setImageBitmap(bitmap);
-                            }
-                        });
-                        break;
-                    case 2:
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView2.setImageBitmap(bitmap);
-                            }
-                        });
-                        break;
-                    case 3:
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView3.setImageBitmap(bitmap);
-                            }
-                        });
-                        break;
-                    case 4:
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView4.setImageBitmap(bitmap);
-                            }
-                        });
-                        break;
-                    case 5:
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView5.setImageBitmap(bitmap);
-                            }
-                        });
-                        count = 0;
-                        break;
-                }
-                count += 1;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imgView.setImageBitmap(bitmap);
+                    }
+                });
                 image.close();
-            }
-        });
-        stop = (Button) floatview.findViewById(R.id.stop);
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("click stop:" + count);
             }
         });
 
